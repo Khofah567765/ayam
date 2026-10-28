@@ -43,6 +43,6 @@ jobs:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           FIREBASE_DATABASE_URL: ${{ secrets.FIREBASE_DATABASE_URL }}
           TAIFOOD_CATEGORY_ID: ${{ secrets.TAIFOOD_CATEGORY_ID || '-globalSports' }}
-          TAIFOOD_CATEGORY_NAME: ${{ secrets.TAIFOOD_CATEGORY_NAME || 'GLOBAL SPORTS' }}
+          TAIFOOD_CATEGORY_NAME: ${{ secrets.TAIFOOD_CATEGORY_NAME || 'GLOBAL SPORTS FHD' }}
           TAIFOOD_CATEGORY_ORDER: ${{ secrets.TAIFOOD_CATEGORY_ORDER || '3' }}
         run: python private_core/kalkun.py
