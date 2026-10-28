@@ -46,12 +46,3 @@ jobs:
           TAIFOOD_CATEGORY_NAME: ${{ secrets.TAIFOOD_CATEGORY_NAME || 'GLOBAL SPORTS' }}
           TAIFOOD_CATEGORY_ORDER: ${{ secrets.TAIFOOD_CATEGORY_ORDER || '3' }}
         run: python private_core/kalkun.py
-
-      # 6. Commit file hasil taifood_events.json ke Repo Publik ini
-      - name: Commit & Push taifood_events.json ke Repo
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add taifood_events.json
-          git commit -m "Auto Update: live events & streams" || echo "Tidak ada perubahan lokal"
-          git push
