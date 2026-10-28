@@ -38,7 +38,7 @@ jobs:
           pip install requests firebase-admin
 
       # 5. Jalankan kalkun.py dari folder private
-      - name: Ekstraksi Taifood Streams via kalkun.py & Push ke Firebase
+      - name: Ekstraksi ayamkalkun via kalkun.py
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           FIREBASE_DATABASE_URL: ${{ secrets.FIREBASE_DATABASE_URL }}
@@ -53,5 +53,5 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add taifood_events.json
-          git commit -m "Auto Update: Taifood live events & streams" || echo "Tidak ada perubahan lokal"
+          git commit -m "Auto Update: live events & streams" || echo "Tidak ada perubahan lokal"
           git push
