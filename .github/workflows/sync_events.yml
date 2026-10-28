@@ -1,0 +1,57 @@
+name: Sync Taifood Live Streams to Firebase
+
+on:
+  schedule:
+    # Otomatis berjalan setiap 30 menit
+    - cron: '*/15 * * * *'
+  workflow_dispatch: # Tombol manual "Run workflow" di GitHub Actions
+
+jobs:
+  sync-taifood:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      # 1. Checkout Repo Publik ini (tempat workflow berada)
+      - name: Checkout Public Repository
+        uses: actions/checkout@v4
+
+      # 2. Checkout Repo Private yang berisi kalkun.py menggunakan PAT
+      - name: Checkout Private Core Scraper
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ secrets.PRIVATE_REPO_NAME }} # Contoh Secret: Username/NamaRepoPrivate
+          token: ${{ secrets.GH_PAT }}                 # GitHub Personal Access Token dengan izin read repo private
+          path: private_core                           # Folder sementara tempat kalkun.py ditarik
+
+      # 3. Setup Lingkungan Python
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # 4. Install Dependencies
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests firebase-admin
+
+      # 5. Jalankan kalkun.py dari folder private
+      - name: Ekstraksi Taifood Streams via kalkun.py & Push ke Firebase
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          FIREBASE_DATABASE_URL: ${{ secrets.FIREBASE_DATABASE_URL }}
+          TAIFOOD_CATEGORY_ID: ${{ secrets.TAIFOOD_CATEGORY_ID || '-globalSports' }}
+          TAIFOOD_CATEGORY_NAME: ${{ secrets.TAIFOOD_CATEGORY_NAME || 'GLOBAL SPORTS' }}
+          TAIFOOD_CATEGORY_ORDER: ${{ secrets.TAIFOOD_CATEGORY_ORDER || '3' }}
+        run: python private_core/kalkun.py
+
+      # 6. Commit file hasil taifood_events.json ke Repo Publik ini
+      - name: Commit & Push taifood_events.json ke Repo
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add taifood_events.json
+          git commit -m "Auto Update: Taifood live events & streams" || echo "Tidak ada perubahan lokal"
+          git push
