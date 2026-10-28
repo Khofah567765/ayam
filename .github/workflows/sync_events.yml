@@ -7,7 +7,7 @@ on:
   workflow_dispatch: # Tombol manual "Run workflow" di GitHub Actions
 
 jobs:
-  sync-taifood:
+  sync-ayamkalkun:
     runs-on: ubuntu-latest
     permissions:
       contents: write
