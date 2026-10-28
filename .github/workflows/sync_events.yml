@@ -1,4 +1,4 @@
-name: Sync Taifood Live Streams to Firebase
+name: ayamkalkun
 
 on:
   schedule:
